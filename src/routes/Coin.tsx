@@ -5,7 +5,6 @@ interface RouteParams {
 }
 function Coin() {
   const { coinId } = useParams<RouteParams>();
-
   return <h1>Coin: {coinId}</h1>;
 }
 
