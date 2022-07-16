@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Switch, Route, useParams, useLocation, useRouteMatch } from "react-router";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
@@ -6,6 +5,7 @@ import styled from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
 import { fetchCoinInfo, fetchTickers } from "../api";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -16,12 +16,16 @@ const Container = styled.div`
 const Header = styled.header`
   height: 10vh;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 `;
 const Title = styled.h1`
   font-size: 48px;
+  text-align: center;
   color: ${(props) => props.theme.accentColor};
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 const Loader = styled.span`
   text-align: center;
@@ -69,6 +73,11 @@ const Tab = styled.span<{ isActive: boolean }>`
   a {
     display: block;
   }
+`;
+const BackBtn = styled.span`
+  font-weight: 400;
+  padding: 10px 5px;
+  color: ${(props) => props.theme.textColor};
 `;
 
 interface RouteParams {
@@ -143,7 +152,10 @@ function Coin() {
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId));
-  const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(["tickers", coinId], () => fetchTickers(coinId));
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(["tickers", coinId], () => fetchTickers(coinId), {
+    refetchInterval: 5000,
+  });
+
   // const [loading, setLoading] = useState(true);
   // const [info, setInfo] = useState<InfoData>();
   // const [priceInfo, setPriceInfo] = useState<PriceData>();
@@ -162,7 +174,13 @@ function Coin() {
   const loading = infoLoading || tickersLoading;
   return (
     <Container>
+      <Helmet>
+        <title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</title>
+      </Helmet>
       <Header>
+        <BackBtn>
+          <Link to={"/"}>&larr;Back</Link>
+        </BackBtn>
         <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
       </Header>
       {loading ? (
@@ -179,8 +197,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>{tickersData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
