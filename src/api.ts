@@ -13,8 +13,8 @@ export function fetchTickers(coinId: string) {
 }
 
 export function fetchCoinHistory(coinId: string) {
-  const endDate = Math.floor(Date.now() / 1000);
-  const startDate = endDate - 60 * 60 * 23 * 7 * 1;
-
+  // const endDate = Math.floor(Date.now() / 1000);
+  // const startDate = endDate - 60 * 60 * 23 * 7 * 1;
+  // console.log(coinId);
   return fetch(`https://ohlcv-api.nomadcoders.workers.dev?coinId=${coinId}`).then((response) => response.json());
 }
