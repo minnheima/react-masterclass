@@ -3,7 +3,6 @@ import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { darkTheme, lightTheme } from "./theme";
 import { ThemeProvider } from "styled-components";
-import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "./routes/atoms";
 const GlobalStyle = createGlobalStyle`
