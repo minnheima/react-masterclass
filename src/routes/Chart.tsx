@@ -14,15 +14,16 @@ interface IHistorical {
 }
 interface ChartProps {
   coinId: string;
+  isDark: boolean;
 }
 
-function Chart({ coinId }: ChartProps) {
-  const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {
+function Chart({ coinId, isDark }: ChartProps) {
+  const { isLoading, data } = useQuery<IHistorical[]>(["history", coinId], () => fetchCoinHistory(coinId), {
     refetchInterval: 10000,
   });
-  const ohlcvData = data?.map((ohlcv) => ({
-    x: new Date(ohlcv.time_open * 1000),
-    y: [ohlcv.open, ohlcv.close, ohlcv.high, ohlcv.low],
+  const historyData = data?.map((history) => ({
+    x: new Date(history.time_open * 1000),
+    y: [history.open, history.close, history.high, history.low],
   }));
 
   // console.log(data?.map((price) => price.close));
@@ -38,10 +39,13 @@ function Chart({ coinId }: ChartProps) {
           series={[
             {
               name: "price",
-              data: ohlcvData as [],
+              data: historyData as [],
             },
           ]}
           options={{
+            theme: {
+              mode: isDark ? "dark" : "light",
+            },
             chart: {
               height: 300,
               width: 500,
