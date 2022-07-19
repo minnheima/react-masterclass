@@ -1,22 +1,40 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+
+// function ToDoList() {
+//   const [toDo, setToDo] = useState("");
+//   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
+//     const {
+//       currentTarget: { value },
+//     } = e;
+//     setToDo(value);
+//   };
+//   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+//     console.log(toDo);
+//   };
+
+//   return (
+//     <div>
+//       <form onSubmit={onSubmit}>
+//         <input onChange={onChange} value={toDo} placeholder="Write a to do" />
+//         <button>Add</button>
+//       </form>
+//     </div>
+//   );
+// }
 
 function ToDoList() {
-  const [toDo, setTodo] = useState("");
-  const onChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = e;
-    setTodo(value);
-  };
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(toDo);
-  };
-
+  const { register, watch } = useForm();
+  console.log(watch());
   return (
     <div>
-      <form onSubmit={onSubmit}>
-        <input onChange={onChange} value={toDo} placeholder="Write a to do" />
+      <form>
+        <input {...register("email")} placeholder="Email" />
+        <input {...register("firstName")} placeholder="First Name" />
+        <input {...register("lastName")} placeholder="Last Name" />
+        <input {...register("username")} placeholder="Username" />
+        <input {...register("password")} placeholder="Password" />
         <button>Add</button>
       </form>
     </div>
