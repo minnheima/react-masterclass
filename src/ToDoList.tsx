@@ -1,4 +1,3 @@
-import { AnyARecord } from "dns";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -32,6 +31,7 @@ interface IForm {
   userName: string;
   password: string;
   password1: string;
+  extraError?: string;
 }
 
 function ToDoList() {
@@ -39,15 +39,19 @@ function ToDoList() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>({
     defaultValues: {
       email: "@naver.com",
     },
   });
-  const onValid = (data: any) => {
-    console.log(data);
+  const onValid = (data: IForm) => {
+    if (data.password !== data.password1) {
+      setError("password1", { message: "Password are not the same." }, { shouldFocus: true });
+    }
+    // setError("extraError", { message: "Server offline." });
   };
-  console.log(errors);
+  // console.log(errors);
   return (
     <div>
       <form style={{ display: "flex", flexDirection: "column" }} onSubmit={handleSubmit(onValid)}>
@@ -62,7 +66,16 @@ function ToDoList() {
           placeholder="Email"
         />
         <span>{errors?.email?.message}</span>
-        <input {...register("firstName", { required: "write here", minLength: 10 })} placeholder="First Name" />
+        <input
+          {...register("firstName", {
+            required: "write here",
+            validate: {
+              noNico: (value) => (value.includes("nico") ? "no nico allowed" : true),
+              noNick: (value) => (value.includes("nick") ? "no nick allowed" : true),
+            },
+          })}
+          placeholder="First Name"
+        />
         <span>{errors?.firstName?.message}</span>
         <input {...register("lastName", { required: "write here" })} placeholder="Last Name" />
         <span>{errors?.lastName?.message}</span>
@@ -82,6 +95,7 @@ function ToDoList() {
         <input {...register("password1", { required: "write again" })} placeholder="Password check" />
         <span>{errors?.password1?.message}</span>
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </div>
   );
