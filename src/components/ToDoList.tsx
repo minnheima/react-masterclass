@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
 import { toDoState } from "../atom";
-import CreateToDo from "./CreatToDo";
+import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
 function ToDoList() {
