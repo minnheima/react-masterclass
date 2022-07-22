@@ -10,7 +10,7 @@ function ToDo({ text, category, id }: IToDo) {
     } = e;
     setToDos((oldToDos) => {
       const targetIdx = oldToDos.findIndex((toDo) => toDo.id === id);
-      const newToDo = { text, id, category: name as any }; // {text, id, category: name as IToDo["category"]}이렇게 작성해도 됨
+      const newToDo = { text, id, category: name as any }; 
 
       return [...oldToDos.slice(0, targetIdx), newToDo, ...oldToDos.slice(targetIdx + 1)];
     });
