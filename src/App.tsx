@@ -28,9 +28,9 @@ const GlobalStyle = createGlobalStyle`
     display: block;
   }
   /* HTML5 hidden-attribute fix for newer browsers */
-  /* *[hidden] {
+  *[hidden] {
     display: none;
-  } */
+  }
   *{
     box-sizing: border-box;
   }
@@ -41,7 +41,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${(props) => props.theme.bgColor};
     color: ${(props) => props.theme.textColor};
   }
-  menu, ol, ul {
+  menu, ol, ul, li {
     list-style: none;
   }
   blockquote, q {
@@ -59,6 +59,9 @@ const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;
     color: inherit;
+  }
+  button {
+    border:none;
   }
 `;
 
