@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
 import App from "./App";
 import { RecoilRoot } from "recoil";
 import { createGlobalStyle } from "styled-components";
@@ -43,7 +43,7 @@ const GlobalStyle = createGlobalStyle`
     font-weight: 300;
     line-height: 1.2;
     background-color: ${(props) => props.theme.bgColor};
-    color: ${(props) => props.theme.textColor};
+    color: black;
   }
   menu, ol, ul {
     list-style: none;
@@ -65,12 +65,14 @@ const GlobalStyle = createGlobalStyle`
     color: inherit;
   }
 `;
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-root.render(
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(
   <RecoilRoot>
     <ThemeProvider theme={darkTheme}>
       <GlobalStyle />
       <App />
     </ThemeProvider>
-  </RecoilRoot>
+  </RecoilRoot>,
+  rootElement
 );
