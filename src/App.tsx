@@ -39,6 +39,7 @@ function App() {
       });
     }
     if (destination?.droppableId !== source.droppableId) {
+      // different board movement
       setToDos((allBoards) => {
         const sourceBoard = [...allBoards[source.droppableId]];
         const destinationBoard = [...allBoards[destination.droppableId]];
