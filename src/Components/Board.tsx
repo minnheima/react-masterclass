@@ -1,6 +1,9 @@
+import { useForm } from "react-hook-form";
 import { Droppable } from "react-beautiful-dnd";
 import DraggableCard from "./DraggableCard";
 import styled from "styled-components";
+import { ITodo, toDoState } from "../atom";
+import { useSetRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   width: 300px;
@@ -27,6 +30,12 @@ const Area = styled.div<IAreaProps>`
   transition: background-color 0.2s ease-in-out;
   background-color: ${(props) => (props.isDraggingOver ? "#dfe6e9" : props.isDraggingFromThisWith ? "#b2bec3" : "transparent")};
 `;
+const Form = styled.form`
+  width: 100%;
+  input {
+    width: 100%;
+  }
+`;
 
 interface IAreaProps {
   isDraggingOver: boolean;
@@ -34,14 +43,36 @@ interface IAreaProps {
 }
 
 interface IBoardProps {
-  toDos: string[];
+  toDos: ITodo[];
   boardId: string;
 }
+interface IForm {
+  toDo: string;
+}
+
 // Boolean() will just convert to true/false.   - line 46
 function Board({ toDos, boardId }: IBoardProps) {
+  const setToDos = useSetRecoilState(toDoState);
+  const { register, setValue, handleSubmit } = useForm<IForm>();
+  const onValid = ({ toDo }: IForm) => {
+    const newTodo = {
+      id: Date.now(),
+      text: toDo,
+    };
+    setToDos((allBoards) => {
+      return {
+        ...allBoards,
+        [boardId]: [newTodo, ...allBoards[boardId]],
+      };
+    });
+    setValue("toDo", "");
+  };
   return (
     <Wrapper>
       <Title>{boardId}</Title>
+      <Form onSubmit={handleSubmit(onValid)}>
+        <input {...register("toDo", { required: true })} type="text" placeholder={`Add task on ${boardId}`} />
+      </Form>
       <Droppable droppableId={boardId}>
         {(magic, info) => (
           <Area
@@ -51,7 +82,7 @@ function Board({ toDos, boardId }: IBoardProps) {
             {...magic.droppableProps}
           >
             {toDos.map((toDo, index) => (
-              <DraggableCard key={toDo} index={index} toDo={toDo} />
+              <DraggableCard key={toDo.id} index={index} toDoId={toDo.id} toDoText={toDo.text} />
             ))}
             {magic.placeholder}
           </Area>
