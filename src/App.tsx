@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import { toDoState } from "./atom";
 import styled from "styled-components";
 import Board from "./Components/Board";
+import Trash from "./Components/Trash";
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,6 +12,7 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  flex-direction: column;
 `;
 const Boards = styled.div`
   width: 100%;
@@ -23,10 +25,18 @@ const Boards = styled.div`
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = (info: DropResult) => {
-    console.log(info);
-    const { destination, draggableId, source } = info;
+    const { destination, source } = info;
     if (!destination) return;
-    if (destination?.droppableId === source.droppableId) {
+    if (destination?.droppableId === "trash") {
+      setToDos((allBoards) => {
+        const boardCopy = [...allBoards[source.droppableId]];
+        boardCopy.splice(source.index, 1);
+        return {
+          ...allBoards,
+          [source.droppableId]: boardCopy,
+        };
+      });
+    } else if (destination?.droppableId === source.droppableId) {
       // same board movement.
       setToDos((allBoards) => {
         const boardCopy = [...allBoards[source.droppableId]];
@@ -38,8 +48,7 @@ function App() {
           [source.droppableId]: boardCopy,
         };
       });
-    }
-    if (destination?.droppableId !== source.droppableId) {
+    } else if (destination?.droppableId !== source.droppableId) {
       // different board movement
       setToDos((allBoards) => {
         const sourceBoard = [...allBoards[source.droppableId]];
@@ -55,6 +64,7 @@ function App() {
       });
     }
   };
+  // console.log(toDos);
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
@@ -63,6 +73,7 @@ function App() {
             <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
           ))}
         </Boards>
+        <Trash />
       </Wrapper>
     </DragDropContext>
   );
